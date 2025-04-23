@@ -1,39 +1,45 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { AuthProvider } from '@/providers/auth-provider'
+import { useFonts } from 'expo-font'
+import { Stack } from 'expo-router'
+import { useEffect } from 'react'
+import { useColorScheme } from 'react-native'
+import { TamaguiProvider } from 'tamagui'
+import tamaguiConfig from './styles/tamagui.config'
+import { QueryClient, QueryClientProvider, focusManager } from '@tanstack/react-query'
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const queryClient = new QueryClient()
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  })
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      // can hide splash screen here
     }
-  }, [loaded]);
+  }, [loaded])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="new-order" options={{ headerShown: false }} />
+            {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
+          </Stack>
+        </AuthProvider>
+      </QueryClientProvider>
+    </TamaguiProvider>
+  )
 }
