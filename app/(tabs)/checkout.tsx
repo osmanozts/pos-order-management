@@ -130,10 +130,10 @@ const Checkout = () => {
                             width: 400,
                             height: 400,
                         }}
-                        source={require('../../assets/animations/empty.json')}
+                        source={require('../../assets/animations/checkout.json')}
                     />
                     <Text fontWeight="bold" fontSize={26} color="$textSecondary">
-                        Keine offenen Bestellungen
+                        Keine offenen Rechnungen
                     </Text>
                 </YStack>
             )}
