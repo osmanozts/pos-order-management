@@ -1,22 +1,59 @@
-import { Text, YStack } from "tamagui";
+import { Text, XStack, YStack } from "tamagui";
+import { Utensils, CupSoda, Plus } from "@tamagui/lucide-icons";
+
+const iconMap = {
+    dish: Utensils,
+    topping: Plus,
+    drink: CupSoda,
+};
+
+interface OrderCardRowProps {
+    label: string;
+    value: string;
+    onPress: () => void;
+    type: "dish" | "topping" | "drink";
+}
 
 export function OrderCardRow({
     label,
     value,
     onPress,
-}: {
-    label: string;
-    value: string;
-    onPress: () => void;
-}) {
+    type,
+}: OrderCardRowProps) {
+    const Icon = iconMap[type];
+
     return (
-        <YStack minHeight="$3" gap="$2" borderColor="$accent" borderWidth={1} padding="$4" borderRadius="$2" onPress={onPress} pressStyle={{ opacity: 0.6 }}>
-            <Text fontSize="$5" color="$textSecondary">
-                {label}:
-            </Text>
-            <Text fontSize="$4" color="$text">
-                {value}
-            </Text>
-        </YStack>
+        <XStack
+            borderRadius="$radiusMd"
+            borderWidth={1}
+            borderColor="$borderLight"
+            paddingVertical="$md"
+            paddingHorizontal="$lg"
+            backgroundColor="$surfaceSecondary"
+            alignItems="center"
+            gap="$md"
+            pressStyle={{ scale: 0.95 }}
+            onPress={onPress}
+        >
+            <YStack
+                width="$buttonSm"
+                height="$buttonSm"
+                backgroundColor="$accentBg"
+                borderRadius="$radiusMd"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Icon size={18} color="#F85F6A" />
+            </YStack>
+
+            <YStack flex={1}>
+                <Text fontSize="$md" fontWeight="$3" color="$textSecondary">
+                    {label}
+                </Text>
+                <Text fontSize="$lg" fontWeight="$2" color="$textSecondary">
+                    {value}
+                </Text>
+            </YStack>
+        </XStack>
     );
 }
