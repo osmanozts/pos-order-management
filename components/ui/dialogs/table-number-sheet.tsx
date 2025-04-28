@@ -4,6 +4,7 @@ import { Button, Text, XStack, YStack } from 'tamagui'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Placement } from '@/models';
+import { CustomButton } from '../buttons';
 
 interface Props {
     isOpen: boolean
@@ -45,9 +46,9 @@ export const TableNumberSheet = ({
 
             <Sheet.Frame
                 backgroundColor="white"
-                padding="$4"
-                borderTopLeftRadius="$4"
-                borderTopRightRadius="$4"
+                padding="$md"
+                borderTopLeftRadius="radiusMd"
+                borderTopRightRadius="radiusMd"
                 shadowColor="#000"
                 shadowOpacity={0.1}
                 shadowRadius={10}
@@ -55,43 +56,40 @@ export const TableNumberSheet = ({
                 <YStack
                     alignSelf="center"
                     marginBottom="$4"
-                    width="$2"
-                    height={5}
+                    width="$buttonSm"
+                    height="$xxs"
                     borderRadius={10}
                     backgroundColor="#ccc" />
 
-                <Text textAlign='center' fontSize="$6" fontWeight="600" marginBottom="$4" color="$text">
+                <Text textAlign='center' fontSize="$xl" fontWeight="600" marginBottom="$4" color="$text">
                     Wähle eine Tischnummer
                 </Text>
 
-                <YStack flexWrap="wrap" gap="$2" justifyContent="center">
-                    {tables.map((table, index) => (
-                        <Button
-                            key={table + index.toString()}
-                            pressStyle={{ opacity: 0.5 }}
-                            backgroundColor="$accent"
-                            width="100%" height="$2" margin="$2"
-                            borderRadius="$3"
-                            alignItems="center"
-                            justifyContent="center"
-                            borderWidth={1}
-                            icon={table.icon}
-                            onPress={() => {
-                                onSelect(table)
-                                setIsOpen(false)
-                            }}
+
+                {tables.map((table, index) => (
+                    <CustomButton
+                        key={table + index.toString()}
+                        pressStyle={{ opacity: 0.5 }}
+                        width="$xl"
+                        margin="$sm"
+                        alignSelf='center'
+                        icon={table.icon}
+                        onPress={() => {
+                            onSelect(table)
+                            setIsOpen(false)
+                        }}
+                    >
+                        <Text
+                            key={table.text}
+                            fontSize="$lg"
+                            color="$invertedText"
                         >
-                            <Text
-                                key={table.text}
-                                fontSize="$6"
-                                color="$textInverted"
-                            >
-                                {table.text}
-                            </Text>
-                        </Button>
-                    ))}
-                </YStack>
+                            {table.text}
+                        </Text>
+                    </CustomButton>
+                ))}
+
             </Sheet.Frame>
-        </Sheet>
+        </Sheet >
     )
 }

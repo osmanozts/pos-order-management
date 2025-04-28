@@ -66,9 +66,9 @@ export function InputField({
         alignItems="center"
         width="100%"
         backgroundColor="$inputBgColor"
-        padding={14}
+        padding="$md"
         borderColor={isValid ? "$dark" : "$red"}
-        borderRadius={8}
+        borderRadius="$radiusSm"
         borderWidth={1}
       >
         {icon && <Stack marginRight={8}>{icon}</Stack>}
@@ -85,7 +85,7 @@ export function InputField({
         />
       </XStack>
       {!isValid && (
-        <Text marginTop="$2" marginLeft="$2" fontSize="$2" color="$accentColor">
+        <Text marginTop="$sm" marginLeft="$sm" fontSize="$sm" color="$accentColor">
           {regexErrorText}
         </Text>
       )}

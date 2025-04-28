@@ -2,13 +2,26 @@ import { Button, styled } from "tamagui";
 
 export const CustomButton = styled(Button, {
     name: "CustomButton",
-    borderRadius: "$2",
-
-    fontWeight: "bold",
-    height: "$2",
-    color: "$textInverted",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "$accent",
-    pressStyle: {
-        backgroundColor: "$successHover"
-    },
+    paddingVertical: "$md",
+    borderRadius: "$radiusSm",
+    pressStyle: { scale: 0.95 },
+    fontWeight: "$bold",
+    maxHeight: "$sm",
+    color: "$invertedText",
+
+    variants: {
+        success: {
+            true: {
+                backgroundColor: "$success",
+            },
+        },
+        warning: {
+            true: {
+                backgroundColor: "$warning",
+            }
+        }
+    }
 });
