@@ -1,20 +1,18 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
-import { CustomButton, OrderOverview } from "@/components";
-import { useNavigation, useRouter } from "expo-router";
+import { CustomButton, OrderOverview, PriceOverview } from "@/components";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { supabase, useOrders } from "@/db";
+import { supabase, useFinishedOrders } from "@/db";
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions } from "react-native";
-import { useFocusEffect } from "@react-navigation/native"; // Neu!
+import { useFocusEffect } from "@react-navigation/native"; // NEU!
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-const Kitchen = () => {
-    const router = useRouter();
+const Checkout = () => {
     const insets = useSafeAreaInsets();
     const animation = useRef<LottieView>(null);
-
     const scrollRef = useRef<ScrollView>(null);
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,22 +22,11 @@ const Kitchen = () => {
         setCurrentIndex(index);
     };
 
-    const { data: orders, refetch, isLoading } = useOrders();
+    const { data: orders, refetch, isLoading } = useFinishedOrders();
 
     useEffect(() => {
-        const insertChannel = supabase
-            .channel("orders_insert_listener")
-            .on(
-                "postgres_changes",
-                { event: "INSERT", schema: "public", table: "orders" },
-                () => {
-                    refetch();
-                }
-            )
-            .subscribe();
-
         const updateChannel = supabase
-            .channel("orders_update_listener")
+            .channel("order_update_listener")
             .on(
                 "postgres_changes",
                 { event: "UPDATE", schema: "public", table: "orders" },
@@ -50,15 +37,12 @@ const Kitchen = () => {
             .subscribe();
 
         return () => {
-            console.log("UNSUBSCRIBE")
-            insertChannel.unsubscribe();
             updateChannel.unsubscribe();
         };
     }, []);
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log("FOKUSS");
             refetch();
         }, [])
     );
@@ -71,16 +55,8 @@ const Kitchen = () => {
             paddingHorizontal="$md"
             gap="$md"
         >
-            <CustomButton
-                marginBottom="$md"
-                onPress={() => router.replace("/new-order")}
-                color="$invertedText"
-            >
-                Bestellung hinzufügen
-            </CustomButton>
-
             {orders && orders.length > 0 && (
-                <XStack justifyContent="center" alignItems="center" marginBottom="$sm" gap="$xs">
+                <XStack justifyContent="center" alignItems="center" marginVertical="$lg" gap="$xs">
                     {orders.map((_, index) => (
                         <YStack
                             key={index}
@@ -113,14 +89,36 @@ const Kitchen = () => {
                         }}
                         showsVerticalScrollIndicator={false}
                     >
-                        {orders?.map((order, index) => (
-                            <OrderOverview
-                                key={index}
-                                order={order}
-                                isLoading={isLoading}
-                                refetch={() => refetch()}
-                            />
-                        ))}
+                        {orders.map((order, index) => {
+                            const totalDishPrices = order.order_items.reduce(
+                                (sum, item) => sum + (item.main_dish?.price ?? 0),
+                                0
+                            );
+                            const totalToppingPrices = order.order_items.reduce(
+                                (sum, item) => sum + item.toppings.reduce(
+                                    (sumT, topping) => sumT + (topping.values?.price ?? 0),
+                                    0
+                                ),
+                                0
+                            );
+                            const totalDrinkPrices = order.order_items.reduce(
+                                (sum, item) => sum + item.drinks.reduce(
+                                    (sumD, drink) => sumD + (drink.values?.price ?? 0),
+                                    0
+                                ),
+                                0
+                            );
+
+                            return (
+                                <PriceOverview
+                                    key={index}
+                                    order={order}
+                                    isLoading={isLoading}
+                                    refetch={() => refetch()}
+                                    totalPrice={totalDishPrices + totalToppingPrices + totalDrinkPrices}
+                                />
+                            );
+                        })}
                     </ScrollView>
                 </ScrollView>
             ) : (
@@ -143,4 +141,4 @@ const Kitchen = () => {
     );
 };
 
-export default Kitchen;
+export default Checkout;

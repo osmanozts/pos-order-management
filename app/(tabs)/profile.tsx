@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, ScrollView, Button } from 'react-native';
 
-const KitchenCounter = () => {
+const Profile = () => {
     return (
         <View style={{ flex: 1, padding: 20 }}>
             <Text>Küche/Theke</Text>
@@ -19,4 +19,4 @@ const KitchenCounter = () => {
     );
 };
 
-export default KitchenCounter;
+export default Profile;

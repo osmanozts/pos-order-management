@@ -1,28 +1,28 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { ChefHat, Coins, UserRound } from '@tamagui/lucide-icons';
 import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
     return (
-        <Tabs screenOptions={{ tabBarActiveTintColor: 'green', headerShown: false }}>
+        <Tabs screenOptions={{ tabBarActiveTintColor: '#F85F6A', headerShown: false }}>
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Bestellung',
-                    tabBarIcon: ({ color }) => <FontAwesome size={28} name="pencil" color={color} />,
-                }}
-            />
-            <Tabs.Screen
-                name="kitchen-counter"
-                options={{
                     title: 'Küche',
-                    tabBarIcon: ({ color }) => <FontAwesome size={28} name="apple" color={color} />,
+                    tabBarIcon: ({ color }) => <ChefHat size={28} color={color} />,
                 }}
             />
             <Tabs.Screen
-                name="cash-register"
+                name="checkout"
                 options={{
                     title: 'Kasse',
-                    tabBarIcon: ({ color }) => <FontAwesome size={28} name="money" color={color} />,
+                    tabBarIcon: ({ color }) => <Coins size={28} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: 'Profil',
+                    tabBarIcon: ({ color }) => <UserRound size={28} color={color} />,
                 }}
             />
         </Tabs>
