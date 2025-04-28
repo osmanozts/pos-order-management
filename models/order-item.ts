@@ -6,4 +6,5 @@ export interface OrderItem {
   main_dish: Dish | null;
   toppings: Topping[];
   drinks: Drink[];
+  note?: string;
 }

@@ -11,19 +11,25 @@ export type Database = {
     Tables: {
       drinks: {
         Row: {
+          category: Database["public"]["Enums"]["drink_type"] | null
           created_at: string
+          has_pfand: boolean | null
           id: number
           name: string | null
           price: number | null
         }
         Insert: {
+          category?: Database["public"]["Enums"]["drink_type"] | null
           created_at?: string
+          has_pfand?: boolean | null
           id?: number
           name?: string | null
           price?: number | null
         }
         Update: {
+          category?: Database["public"]["Enums"]["drink_type"] | null
           created_at?: string
+          has_pfand?: boolean | null
           id?: number
           name?: string | null
           price?: number | null
@@ -136,23 +142,29 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          index: number | null
           main_dish_id: string | null
           note: string | null
           order_id: string | null
+          state: Database["public"]["Enums"]["OrderStatus"] | null
         }
         Insert: {
           created_at?: string | null
           id?: string
+          index?: number | null
           main_dish_id?: string | null
           note?: string | null
           order_id?: string | null
+          state?: Database["public"]["Enums"]["OrderStatus"] | null
         }
         Update: {
           created_at?: string | null
           id?: string
+          index?: number | null
           main_dish_id?: string | null
           note?: string | null
           order_id?: string | null
+          state?: Database["public"]["Enums"]["OrderStatus"] | null
         }
         Relationships: [
           {
@@ -218,18 +230,21 @@ export type Database = {
       }
       toppings: {
         Row: {
+          category: Database["public"]["Enums"]["topping_type"] | null
           created_at: string | null
           id: string
           name: string
           price: number | null
         }
         Insert: {
+          category?: Database["public"]["Enums"]["topping_type"] | null
           created_at?: string | null
           id?: string
           name: string
           price?: number | null
         }
         Update: {
+          category?: Database["public"]["Enums"]["topping_type"] | null
           created_at?: string | null
           id?: string
           name?: string
@@ -245,6 +260,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      drink_type: "alcohol_free"
       main_dish_type:
         | "menu"
         | "doner"
@@ -259,6 +275,12 @@ export type Database = {
         | "extras"
         | "desserts"
       OrderStatus: "IN_PROGRESS" | "DONE" | "PAID"
+      topping_type:
+        | "topping"
+        | "supplement"
+        | "extra"
+        | "exclude_topping"
+        | "exclude_supplement"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -374,6 +396,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      drink_type: ["alcohol_free"],
       main_dish_type: [
         "menu",
         "doner",
@@ -389,6 +412,13 @@ export const Constants = {
         "desserts",
       ],
       OrderStatus: ["IN_PROGRESS", "DONE", "PAID"],
+      topping_type: [
+        "topping",
+        "supplement",
+        "extra",
+        "exclude_topping",
+        "exclude_supplement",
+      ],
     },
   },
 } as const

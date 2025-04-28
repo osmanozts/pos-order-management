@@ -2,6 +2,21 @@ import { OrderItem, Placement } from "@/models";
 import { supabase } from "../supabase";
 import { Database } from "../types";
 
+function getLocalFormattedTimestamp() {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+
 export async function createOrder(
   orderItems: OrderItem[],
   placement: Placement
@@ -9,7 +24,9 @@ export async function createOrder(
   // 1. Bestellung erstellen
   const { data: order, error: orderError } = await supabase
     .from("orders")
-    .insert([{ placement: placement.text }])
+    .insert([
+      { placement: placement.text, created_at: getLocalFormattedTimestamp() },
+    ])
     .select("*")
     .single();
 
@@ -19,9 +36,11 @@ export async function createOrder(
   }
 
   // 2. OrderItems erstellen
-  const orderItemsInserts = orderItems.map((item) => ({
+  const orderItemsInserts = orderItems.map((item, index) => ({
     order_id: order.id,
     main_dish_id: item.main_dish?.id,
+    note: item.note,
+    index: index,
   }));
 
   const { data: orderItemsResult, error: orderItemsError } = await supabase
