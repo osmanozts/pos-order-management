@@ -65,13 +65,13 @@ export function InputField({
       <XStack
         alignItems="center"
         width="100%"
-        backgroundColor="$inputBgColor"
+        backgroundColor="$surface"
         padding="$md"
-        borderColor={isValid ? "$dark" : "$red"}
+        borderColor="$borderLight"
         borderRadius="$radiusSm"
         borderWidth={1}
       >
-        {icon && <Stack marginRight={8}>{icon}</Stack>}
+        {icon && <Stack marginRight="$xs">{icon}</Stack>}
         <Input
           id={id}
           value={localValue}

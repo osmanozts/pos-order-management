@@ -1,21 +1,31 @@
-// tabs/kitchen-counter.tsx
+import { CustomButton } from '@/components';
+import { useAuth } from '@/providers/auth-provider';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { View, Text, ScrollView, Button } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, YStack } from 'tamagui';
 
 const Profile = () => {
+    const router = useRouter();
+    const insets = useSafeAreaInsets();
+    const { user, signOut } = useAuth();
+
     return (
-        <View style={{ flex: 1, padding: 20 }}>
-            <Text>Küche/Theke</Text>
-            <ScrollView>
-                {/* Beispielhafte Darstellung von Bestellungen */}
-                <View>
-                    <Text>Tisch 5 - Döner Tasche</Text>
-                    <Text>Bestellung: Döner Tasche mit Salat</Text>
-                    <Text>Preis: €7.50</Text>
-                    <Button title="Bestellung bestätigen" onPress={() => { /* Bestelllogik hier */ }} />
-                </View>
-            </ScrollView>
-        </View>
+        <YStack
+            flex={1}
+            backgroundColor="$bgPrimary"
+            paddingTop={insets.top}
+            paddingHorizontal="$md"
+            gap="$md"
+        >
+            <Text fontWeight="bold" fontSize={26} color="$textSecondary">
+                Profil
+            </Text>
+            <Text fontWeight="regular" fontSize={26} color="$textSecondary">
+                Email: {user?.email ?? "---"}
+            </Text>
+            <CustomButton onPress={() => signOut()}>Abmelden</CustomButton>
+        </YStack>
     );
 };
 

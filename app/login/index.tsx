@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useAuth } from "@/providers/auth-provider";
 import { View, Text, Button, Input, Stack, YStack, H1 } from "tamagui";
 import { Mail, Lock } from "@tamagui/lucide-icons";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { InputField } from "@/components";
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
+import { CustomButton, InputField } from "@/components";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -26,61 +26,62 @@ export default function LoginPage() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <YStack
-        flex={1}
-        justifyContent="center"
-        paddingHorizontal="md"
-        backgroundColor="tileBgColor"
-        alignItems="center" gap="$xs"
-      >
-        <H1
-          fontSize={32}
-          fontWeight="700"
-          color="$accent"
-          marginBottom="$2"
-          textAlign="center"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}>
+
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <YStack
+          flex={1}
+          justifyContent="center"
+          paddingHorizontal="$md"
+          backgroundColor="tileBgColor"
+          alignItems="center" gap="$md"
         >
-          Ibos Ocakbasi
-        </H1>
+          <H1
+            fontSize={32}
+            fontWeight="700"
+            color="$accent"
+            marginBottom="$2"
+            textAlign="center"
+          >
+            Ibos Ocakbasi
+          </H1>
 
-        <Text fontSize="$sm" color="$disabledText" marginBottom="$4" textAlign="center">
-          Bitte melden Sie sich an, um fortzufahren.
-        </Text>
-
-        <InputField
-          value={email}
-          placeholder="Email..."
-          onChange={setEmail}
-          icon={<Mail color="$disabled" />}
-        />
-        <InputField
-          value={password}
-          placeholder="Passwort"
-          isPasswordField
-          icon={<Lock color="$disabled" />}
-          onChange={setPassword}
-        />
-
-        <Button
-          marginTop="$4"
-          backgroundColor="$accent"
-          color="$invertedTextColor"
-          onPress={handleLogin}
-          width="$lg"
-          height="$sm"
-          borderRadius="radiusMd"
-          fontWeight="600"
-        >
-          Anmelden
-        </Button>
-
-        {error && (
-          <Text color="$red10" fontSize="$sm" marginTop="$2" textAlign="center">
-            {error}
+          <Text fontSize="$lg" color="$disabledText" marginBottom="$md" textAlign="center">
+            Bitte melden Sie sich an, um fortzufahren.
           </Text>
-        )}
-      </YStack>
-    </TouchableWithoutFeedback>
+
+          <InputField
+            value={email}
+            placeholder="Email..."
+            onChange={setEmail}
+            icon={<Mail color="$accent" />}
+          />
+          <InputField
+            value={password}
+            placeholder="Passwort"
+            isPasswordField
+            icon={<Lock color="$accent" />}
+            onChange={setPassword}
+          />
+
+          <CustomButton
+            width="100%"
+            backgroundColor="$accentBg"
+            color="$accent"
+            onPress={handleLogin}
+          >
+            Anmelden
+          </CustomButton>
+
+          {error && (
+            <Text color="$red10" fontSize="$sm" marginTop="$2" textAlign="center">
+              {error}
+            </Text>
+          )}
+        </YStack>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
