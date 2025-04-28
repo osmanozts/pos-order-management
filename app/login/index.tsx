@@ -30,57 +30,56 @@ export default function LoginPage() {
       <YStack
         flex={1}
         justifyContent="center"
-        paddingHorizontal={18}
+        paddingHorizontal="md"
         backgroundColor="tileBgColor"
+        alignItems="center" gap="$xs"
       >
-        <Stack alignItems="center" gap="$4">
-          <H1
-            fontSize={32}
-            fontWeight="700"
-            color="$accent"
-            marginBottom="$2"
-            textAlign="center"
-          >
-            Ibos Ocakbasi
-          </H1>
+        <H1
+          fontSize={32}
+          fontWeight="700"
+          color="$accent"
+          marginBottom="$2"
+          textAlign="center"
+        >
+          Ibos Ocakbasi
+        </H1>
 
-          <Text fontSize="$sm" color="$disabledText" marginBottom="$4" textAlign="center">
-            Bitte melden Sie sich an, um fortzufahren.
+        <Text fontSize="$sm" color="$disabledText" marginBottom="$4" textAlign="center">
+          Bitte melden Sie sich an, um fortzufahren.
+        </Text>
+
+        <InputField
+          value={email}
+          placeholder="Email..."
+          onChange={setEmail}
+          icon={<Mail color="$disabled" />}
+        />
+        <InputField
+          value={password}
+          placeholder="Passwort"
+          isPasswordField
+          icon={<Lock color="$disabled" />}
+          onChange={setPassword}
+        />
+
+        <Button
+          marginTop="$4"
+          backgroundColor="$accent"
+          color="$invertedTextColor"
+          onPress={handleLogin}
+          width="$lg"
+          height="$sm"
+          borderRadius="radiusMd"
+          fontWeight="600"
+        >
+          Anmelden
+        </Button>
+
+        {error && (
+          <Text color="$red10" fontSize="$sm" marginTop="$2" textAlign="center">
+            {error}
           </Text>
-
-          <InputField
-            value={email}
-            placeholder="Email..."
-            onChange={setEmail}
-            icon={<Mail color="$disabled" />}
-          />
-          <InputField
-            value={password}
-            placeholder="Passwort"
-            isPasswordField
-            icon={<Lock color="$disabled" />}
-            onChange={setPassword}
-          />
-
-          <Button
-            marginTop="$4"
-            backgroundColor="$accent"
-            color="$invertedTextColor"
-            onPress={handleLogin}
-            width={140}
-            height={50}
-            borderRadius={8}
-            fontWeight="600"
-          >
-            Anmelden
-          </Button>
-
-          {error && (
-            <Text color="$red10" fontSize="$sm" marginTop="$2" textAlign="center">
-              {error}
-            </Text>
-          )}
-        </Stack>
+        )}
       </YStack>
     </TouchableWithoutFeedback>
   );

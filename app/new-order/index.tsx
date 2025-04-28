@@ -1,174 +1,198 @@
-import { CustomButton, DishSheet, DrinkSheet, OrderCard, TableNumberSheet, ToppingSheet } from "@/components";
+
+
+import { CustomButton, ItemDialog, OrderCard, TableNumberSheet } from "@/components";
 import { createOrder } from "@/db/mutations";
 import { Dish, Drink, OrderItem, Placement } from "@/models";
 import { Topping } from "@/models/topping";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ScrollView, XStack, YStack } from "tamagui";
+import { ScrollView, Spinner, Text, XStack, YStack } from "tamagui";
+import { updateOrderItem } from "./services/update-order-item";
+import { KeyboardAvoidingView, Platform } from "react-native";
+
+type DialogState = {
+    type: 'dish' | 'topping' | 'drink';
+    index: number;
+} | null;
 
 export default function NewOrderIndex() {
-    const router = useRouter()
+    const router = useRouter();
     const insets = useSafeAreaInsets();
-
-    const [isTableSheetOpen, setIsTableSheetOpen] = useState<boolean>(false);
-    const [selectedTable, setSelectedTable] = useState<Placement>();
-
     const [orderItems, setOrderItems] = useState<OrderItem[]>([
         { main_dish: null, toppings: [], drinks: [] },
     ]);
+    const [isTableSheetOpen, setIsTableSheetOpen] = useState<boolean>(false);
+    const [selectedTable, setSelectedTable] = useState<Placement>();
+    const [dialogState, setDialogState] = useState<DialogState>(null);
 
-    const [activeOrderItemIndex, setActiveOrderItemIndex] = useState<number | null>(null);
-    const [activeDishSheet, setActiveDishSheet] = useState<number | null>(null);
-    const [activeToppingSheet, setActiveToppingSheet] = useState<number | null>(null);
-    const [activeDrinkSheet, setActiveDrinkSheet] = useState<number | null>(null);
+    const [loading, setLoading] = useState(false)
 
-    const openDishSheet = (index: number) => {
-        setActiveOrderItemIndex(index);
-        setActiveDishSheet(index);
-    };
+    const openDialog = useCallback((type: 'dish' | 'topping' | 'drink', index: number) => {
+        setDialogState({ type, index });
+    }, []);
 
-    const openToppingSheet = (index: number) => {
-        setActiveOrderItemIndex(index);
-        setActiveToppingSheet(index);
-    };
+    const closeDialog = useCallback(() => {
+        setDialogState(null);
+    }, []);
 
-    const openDrinkSheet = (index: number) => {
-        setActiveOrderItemIndex(index);
-        setActiveDrinkSheet(index);
-    };
+    const handleOrderItemUpdate = useCallback(<K extends keyof OrderItem>(
+        key: K,
+        value: OrderItem[K] extends (infer U)[] ? U : OrderItem[K],
+        append: boolean = false
+    ) => {
+        setOrderItems(prev => updateOrderItem(prev, dialogState, key, value, append));
+    }, [dialogState]);
 
-    const handleDishSelect = (dish: Dish) => {
-        if (activeOrderItemIndex === null) return;
+    const handleAddPerson = useCallback(() => {
+        setOrderItems(prev => [...prev, { main_dish: null, toppings: [], drinks: [] }]);
+    }, []);
 
-        setOrderItems((prev) =>
-            prev.map((item, idx) =>
-                idx === activeOrderItemIndex
-                    ? { ...item, main_dish: dish }
-                    : item
-            )
-        );
+    const handleRemovePerson = useCallback((index: number) => {
+        setOrderItems(prev => prev.filter((_, i) => i !== index));
+    }, []);
 
-        setActiveDishSheet(null);
-        setActiveOrderItemIndex(null);
-    };
+    const handleCompleteOrder = useCallback(async () => {
+        if (!selectedTable) {
+            alert("Wähle zuerst eine Position / Tischnummer aus!");
+        } else {
+            setLoading(true);
+            try {
+                await createOrder(orderItems, selectedTable).then(() => {
+                    router.replace("/(tabs)")
+                });
+            } catch (e) {
+                throw e;
+            }
+            finally {
+                setLoading(false)
+            }
 
-    const handleToppingSelect = (topping: Topping) => {
-        if (activeOrderItemIndex === null) return;
+        }
+    }, [orderItems, selectedTable]);
 
-        setOrderItems((prev) =>
-            prev.map((item, idx) =>
-                idx === activeOrderItemIndex
-                    ? { ...item, toppings: [...item.toppings, topping] }
-                    : item
-            )
-        );
+    const handleCancel = useCallback(() => {
+        router.replace("/(tabs)");
+    }, [router]);
 
-        setActiveDishSheet(null);
-        setActiveOrderItemIndex(null);
-    };
+    const handleTableSelect = useCallback((value: { text: string, icon: React.JSX.Element }) => {
+        setSelectedTable(value);
+    }, []);
 
-    const handleDrinkSelect = (drinks: Drink) => {
-        if (activeOrderItemIndex === null) return;
+    const selectedDialogItem = useMemo(() => {
+        if (!dialogState) return null;
+        const item = orderItems[dialogState.index];
+        if (!item) return null;
+        switch (dialogState.type) {
+            case "dish": return item.main_dish;
+            case "topping": return item.toppings;
+            case "drink": return item.drinks;
+            default: return null;
+        }
+    }, [dialogState, orderItems]);
 
-        setOrderItems((prev) =>
-            prev.map((item, idx) =>
-                idx === activeOrderItemIndex
-                    ? { ...item, drinks: [...item.drinks, drinks] }
-                    : item
-            )
-        );
-
-        setActiveDishSheet(null);
-        setActiveOrderItemIndex(null);
-    };
+    const handleItemSelect = useCallback((item: Dish | Topping | Drink) => {
+        if (!dialogState) return;
+        if (dialogState.type === "dish") {
+            handleOrderItemUpdate("main_dish", item as Dish);
+        } else if (dialogState.type === "topping") {
+            handleOrderItemUpdate("toppings", item as Topping, true);
+        } else if (dialogState.type === "drink") {
+            handleOrderItemUpdate("drinks", item as Drink, true);
+        }
+    }, [dialogState, handleOrderItemUpdate]);
 
     return (
-        <YStack
-            flex={1}
-            backgroundColor="$bgPrimary"
-            paddingTop={insets.top}
-            paddingHorizontal="$4"
-            gap="$4"
-            background="$bgSecondary"
-        >
-
-            <CustomButton onPress={() => setIsTableSheetOpen(true)} icon={selectedTable?.icon}>
-                {!selectedTable ? 'Tischnummer wählen' : selectedTable.text}
-            </CustomButton>
-
-            <CustomButton
-                onPress={() =>
-                    setOrderItems([...orderItems, { main_dish: null, toppings: [], drinks: [] }])
-                }
-                icon={<MaterialIcons name="add" size={24} color="white" />}
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}>
+            <YStack
+                flex={1}
+                backgroundColor="$bgPrimary"
+                paddingTop={insets.top}
+                paddingHorizontal="$lg"
+                gap="$4"
+                background="$bgSecondary"
             >
-                Person hinzufügen
-            </CustomButton>
+                {/* Header-Bereich */}
+                <YStack gap="$lg">
+                    <XStack gap="$md" justifyContent="space-between">
+                        <CustomButton flex={1} onPress={() => setIsTableSheetOpen(true)}>
+                            {selectedTable?.icon}
+                            <Text fontSize="$lg" fontWeight="600" color="$invertedText" marginLeft="$sm">
+                                {!selectedTable ? "Position wählen" : selectedTable.text}
+                            </Text>
+                        </CustomButton>
+                        <CustomButton flex={1} onPress={handleAddPerson}>
+                            <MaterialIcons name="person-add" size={20} color="white" />
+                            <Text fontSize="$lg" fontWeight="600" color="white" marginLeft="$sm">
+                                Hinzufügen
+                            </Text>
+                        </CustomButton>
+                    </XStack>
+                    <XStack gap="$md" justifyContent="space-between">
+                        <CustomButton
+                            flex={1}
+                            success
+                            onPress={handleCompleteOrder}>
+                            {loading ?
+                                <Spinner size="small" color="$accent" />
+                                :
+                                <XStack>
+                                    <MaterialIcons name="check-circle" size={20} color="white" />
+                                    <Text fontSize="$lg" fontWeight="600" color="$invertedText" marginLeft="$sm">
+                                        Abschließen
+                                    </Text>
+                                </XStack>
+                            }
+                        </CustomButton>
+                        <CustomButton flex={1} onPress={handleCancel}>
+                            <MaterialIcons name="cancel" size={20} color="white" />
+                            <Text fontSize="$lg" fontWeight="600" color="$invertedText" marginLeft="$sm">
+                                Abbrechen
+                            </Text>
+                        </CustomButton>
+                    </XStack>
+                </YStack>
 
-            <XStack justifyContent="space-between">
-                <CustomButton
-                    backgroundColor="$success"
-                    onPress={() => createOrder(orderItems, selectedTable!)}
-                    icon={<MaterialIcons name="check" size={24} color='white' />}>
-                    Abschließen
-                </CustomButton>
-                <CustomButton
-                    backgroundColor="$error"
-                    onPress={() => router.replace("/(tabs)")}
-                    icon={<MaterialIcons name="cancel" size={24} color='white' />}>
-                    Abbrechen
-                </CustomButton>
-            </XStack>
-
-            <ScrollView showsVerticalScrollIndicator={false} marginTop="$4" marginBottom="$10" contentContainerStyle={{ gap: '$4' }}>
-                {orderItems.map((item, idx) => (
-                    <OrderCard
-                        key={idx}
-                        index={idx}
-                        selectedDish={item.main_dish || null}
-                        selectedToppings={item.toppings}
-                        selectedDrinks={item.drinks}
-                        onOpenDishSheet={openDishSheet}
-                        openToppingSheet={openToppingSheet}
-                        openDrinkSheet={openDrinkSheet}
-                    />
-                ))}
-
-            </ScrollView>
-
-            <TableNumberSheet isOpen={isTableSheetOpen} setIsOpen={setIsTableSheetOpen} onSelect={(value: { text: string, icon: React.JSX.Element }) => setSelectedTable(value)} />
-            {activeDishSheet !== null && (
-                <DishSheet
-                    selected={orderItems[activeOrderItemIndex ?? 0]?.main_dish ?? null}
-                    onSelect={handleDishSelect}
-                    onClose={() => {
-                        setActiveDishSheet(null);
-                        setActiveOrderItemIndex(null);
-                    }}
+                <ScrollView showsVerticalScrollIndicator={false} marginTop="$lg" marginBottom="$xl" contentContainerStyle={{ gap: '$lg' }}>
+                    {orderItems.map((item, idx) => (
+                        <OrderCard
+                            key={idx}
+                            index={idx}
+                            selectedDish={item.main_dish || null}
+                            selectedToppings={item.toppings}
+                            selectedDrinks={item.drinks}
+                            note={item.note}
+                            onNoteChange={(index, text) => {
+                                setOrderItems(prev => {
+                                    const updated = [...prev];
+                                    updated[index] = {
+                                        ...updated[index],
+                                        note: text,
+                                    };
+                                    return updated;
+                                });
+                            }}
+                            openDialog={(type, index) => openDialog(type, index)}
+                            removeOrder={(index) => handleRemovePerson(index)}
+                        />
+                    ))}
+                </ScrollView>
+                <TableNumberSheet
+                    isOpen={isTableSheetOpen}
+                    setIsOpen={setIsTableSheetOpen}
+                    onSelect={handleTableSelect}
                 />
-            )}
-            {activeToppingSheet !== null && (
-                <ToppingSheet
-                    selected={orderItems[activeOrderItemIndex ?? 0]?.toppings ?? []}
-                    onSelect={handleToppingSelect}
-                    onClose={() => {
-                        setActiveToppingSheet(null);
-                        setActiveOrderItemIndex(null);
-                    }}
+                <ItemDialog
+                    visible={dialogState !== null}
+                    type={dialogState?.type ?? 'dish'}
+                    selected={selectedDialogItem}
+                    onSelect={handleItemSelect}
+                    onClose={closeDialog}
                 />
-            )}
-            {activeDrinkSheet !== null && (
-                <DrinkSheet
-                    selected={orderItems[activeOrderItemIndex ?? 0]?.drinks ?? []}
-                    onSelect={handleDrinkSelect}
-                    onClose={() => {
-                        setActiveDrinkSheet(null);
-                        setActiveOrderItemIndex(null);
-                    }}
-                />
-            )}
-        </YStack>
+            </YStack>
+        </KeyboardAvoidingView>
     );
 }
