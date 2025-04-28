@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
-import { TamaguiProvider } from 'tamagui'
+import { PortalProvider, TamaguiProvider } from 'tamagui'
 import tamaguiConfig from './styles/tamagui.config'
 import { QueryClient, QueryClientProvider, focusManager } from '@tanstack/react-query'
 
@@ -29,17 +29,19 @@ export default function RootLayout() {
 
 
   return (
-    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="new-order" options={{ headerShown: false }} />
-            {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
-          </Stack>
-        </AuthProvider>
-      </QueryClientProvider>
+    <TamaguiProvider config={tamaguiConfig}>
+      <PortalProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="new-order" options={{ headerShown: false }} />
+              {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
+            </Stack>
+          </AuthProvider>
+        </QueryClientProvider>
+      </PortalProvider>
     </TamaguiProvider>
   )
 }

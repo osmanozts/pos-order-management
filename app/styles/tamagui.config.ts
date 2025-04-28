@@ -3,81 +3,110 @@ import { createAnimations } from "@tamagui/animations-moti";
 
 export const tokens = createTokens({
   size: {
-    1: 10,
-    2: 45, // small buttons / indicators
-    3: 90,
-    4: 120,
-    5: 240,
-    6: 360,
-    7: 480,
-    8: 600,
+    xxs: 5,
+    xs: 10,
+    sm: 45,
+    md: 90,
+    lg: 120,
+    xl: 240,
+    xxl: 360,
+    xxxl: 400,
+    max: 600,
+
+    buttonXs: 28,
+    buttonSm: 45,
+    buttonMd: 60,
+    buttonLg: 75,
+
+    iconXxs: 9,
+    iconXs: 18,
+    iconSm: 22,
+    iconMd: 26,
+    iconLg: 32,
+
+    // borderradius
+    radiusNone: 0,
+    radiusSm: 6,
+    radiusMd: 8,
+    radiusLg: 12,
+    radiusXl: 16,
+    roundy: 24,
+    round: 100,
+
+    // fontweights
+    regular: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
+
     true: 120,
   },
   space: {
-    0: 0,
-    1: 2,
-    2: 4,
-    3: 8,
-    4: 12,
-    5: 16,
-    6: 20,
-    7: 24,
-    8: 28,
-    9: 32,
-    10: 36,
+    none: 0,
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    "2xl": 24,
+    "3xl": 28,
+    "4xl": 32,
+    "5xl": 36,
     true: 8,
   },
   radius: {
-    0: 0,
-    1: 6,
-    2: 12,
+    radiusNone: 0,
+    radiusSm: 6,
+    radiusMd: 8,
+    radiusLg: 12,
+    radiusXl: 16,
+    roundy: 24,
     round: 9999,
   },
   zIndex: {
-    0: 0,
-    1: 10,
-    2: 100,
-    3: 1000,
+    xs: 10,
+    sm: 100,
+    md: 1000,
   },
   color: {
     white: "#FFFFFF",
     black: "#000000",
 
-    bgPrimary: "#F5F7FA", // heller, moderner Grundton
-    bgSecondary: "#E9EDF5", // abgesetzter Sekundärton
-    bgTertiary: "#DDE3ED", // für dezente Abgrenzungen
+    gray50: "#F5F7FA",
+    gray100: "#E9EDF5",
+    gray200: "#DDE3ED",
 
-    surface: "#FFFFFF", // Karten, Container
-    surfaceHover: "#F1F4F9", // Hover-Effekt für Oberflächen
-    surfaceActive: "#E2E6EC", // gedrückter Zustand
+    gray900: "#1A1D21",
+    gray700: "#4A5568",
+    gray500: "#94A3B8",
+    gray400: "#A0AEC0",
+    gray300: "#F0F0F0",
 
-    textPrimary: "#1A1D21", // nahezu schwarz, optimale Lesbarkeit
-    textSecondary: "#4A5568", // gedämpftes Grau
-    textInverted: "#FFFFFF", // auf dunklem Grund
-    textDisabled: "#A0AEC0", // ausgegrauter Text
+    blueGray50: "#FAFAFA",
+    blueGray100: "#FFFFFF",
+    blueGray200: "#FEEBED",
+    blueGray300: "#E5EAF2",
 
-    accent: "#3D5AFE", // kräftiges Indigoblau (Primary)
-    accentHover: "#304FFE", // dunklerer Hover-Ton
-    success: "#22C55E", // frisches Grün
-    warning: "#FACC15", // modernes Gelb
-    error: "#F43F5E", // warmes Rot
-
-    borderLight: "#E2E8F0", // helle Ränder
-    borderDark: "#94A3B8", // dunklere Ränder
+    red500: "#F85F6A",
+    red100: "#F85F6A20",
+    green500: "#22C55E",
+    green100: "#22C55E20",
+    yellow400: "#FACC15",
+    red600: "#F43F5E",
   },
 });
 
 const baseFontProps = {
   size: {
-    1: 14,
-    2: 16,
-    3: 18,
-    4: 20,
-    5: 22,
-    6: 24,
-    7: 26,
-    8: 28,
-    9: 30,
+    textXs: 14,
+    textSm: 16,
+    textBase: 18,
+    textLg: 20,
+    headingSm: 22,
+    headingMd: 24,
+    headingLg: 26,
+    headingXl: 28,
+    display: 30,
     true: 18,
   },
   lineHeight: {
@@ -87,10 +116,10 @@ const baseFontProps = {
     true: 24,
   },
   weight: {
-    1: "400",
-    2: "500",
-    3: "600",
-    4: "700",
+    regular: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
     true: "500",
   },
 };
@@ -111,45 +140,61 @@ const tamaguiConfig = createTamagui({
 
   themes: {
     light: {
-      bg: tokens.color.bgPrimary,
-      bgSecondary: tokens.color.bgSecondary,
-      bgTertiary: tokens.color.bgTertiary,
-      surface: tokens.color.surface,
-      surfaceHover: tokens.color.surfaceHover,
-      surfaceActive: tokens.color.surfaceActive,
+      bg: tokens.color.gray50,
+      bgSecondary: tokens.color.gray100,
+      bgTertiary: tokens.color.gray200,
 
-      text: tokens.color.textPrimary,
-      textSecondary: tokens.color.textSecondary,
-      invertedText: tokens.color.textInverted,
-      disabledText: tokens.color.textDisabled,
+      surface: tokens.color.blueGray100,
+      surfaceSecondary: tokens.color.blueGray50,
+      surfaceHover: tokens.color.blueGray200,
+      surfaceActive: tokens.color.blueGray300,
 
-      accent: tokens.color.accent,
-      success: tokens.color.success,
-      warning: tokens.color.warning,
-      error: tokens.color.error,
+      text: tokens.color.gray900,
+      textSecondary: tokens.color.gray700,
+      invertedText: tokens.color.white,
+      disabledText: tokens.color.gray400,
 
-      borderLight: tokens.color.borderLight,
-      borderDark: tokens.color.borderDark,
+      accent: tokens.color.red500,
+      accentBg: tokens.color.red100,
+      success: tokens.color.green500,
+      successBg: tokens.color.green100,
+      warning: tokens.color.yellow400,
+      error: tokens.color.red600,
+
+      borderLight: tokens.color.gray300,
+      borderDark: tokens.color.gray500,
+
+      indicator: tokens.color.red100,
+      indicatorActive: tokens.color.red500,
     },
 
     dark: {
-      bg: tokens.color.bgPrimary,
-      bgSecondary: tokens.color.bgSecondary,
-      bgTertiary: tokens.color.bgTertiary,
-      surface: "#232323", // für Karten
-      surfaceHover: "#2C2C2C", // Hover-Effekt
+      bg: tokens.color.gray50,
+      bgSecondary: tokens.color.gray100,
+      bgTertiary: tokens.color.gray200,
 
-      text: tokens.color.textInverted,
-      textSecondary: "#D1D5DB", // leicht gedämpftes Hellgrau
-      invertedText: tokens.color.textPrimary,
-      disabledText: "#6B7280",
+      surface: tokens.color.blueGray100,
+      surfaceSecondary: tokens.color.blueGray50,
+      surfaceHover: tokens.color.blueGray200,
+      surfaceActive: tokens.color.blueGray300,
 
-      accent: tokens.color.accent,
-      success: tokens.color.success,
-      warning: tokens.color.warning,
-      error: tokens.color.error,
+      text: tokens.color.gray900,
+      textSecondary: tokens.color.gray700,
+      invertedText: tokens.color.white,
+      disabledText: tokens.color.gray400,
 
-      border: "#374151", // dunkle Kontur
+      accent: tokens.color.red500,
+      accentBg: tokens.color.red100,
+      success: tokens.color.green500,
+      successBg: tokens.color.green100,
+      warning: tokens.color.yellow400,
+      error: tokens.color.red600,
+
+      borderLight: tokens.color.gray300,
+      borderDark: tokens.color.gray500,
+
+      indicator: tokens.color.red100,
+      indicatorActive: tokens.color.red500,
     },
   },
 
