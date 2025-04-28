@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { View } from "react-native";
-import { Stack, Input, Text, XStack } from "tamagui";
+import { Input, Stack, Text, XStack } from "tamagui";
 
 interface InputFieldProps {
   id?: string;

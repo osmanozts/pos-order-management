@@ -1,11 +1,11 @@
 import { AuthProvider } from '@/providers/auth-provider'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { PortalProvider, TamaguiProvider } from 'tamagui'
 import tamaguiConfig from './styles/tamagui.config'
-import { QueryClient, QueryClientProvider, focusManager } from '@tanstack/react-query'
 
 
 export default function RootLayout() {

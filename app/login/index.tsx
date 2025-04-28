@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useAuth } from "@/providers/auth-provider";
-import { View, Text, Button, Input, Stack, YStack, H1 } from "tamagui";
-import { Mail, Lock } from "@tamagui/lucide-icons";
-import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
 import { CustomButton, InputField } from "@/components";
+import { useAuth } from "@/providers/auth-provider";
+import { Lock, Mail } from "@tamagui/lucide-icons";
+import React, { useState } from "react";
+import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
+import { H1, Text, YStack } from "tamagui";
 
 export default function LoginPage() {
   const { login } = useAuth();

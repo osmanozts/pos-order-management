@@ -6,7 +6,7 @@ import { supabase, useOrders } from "@/db";
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions } from "react-native";
-import { useFocusEffect } from "@react-navigation/native"; // Neu!
+import { useFocusEffect } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
