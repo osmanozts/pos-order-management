@@ -135,6 +135,7 @@ export default function NewOrderIndex() {
                         <CustomButton
                             flex={1}
                             success
+                            disabled={loading}
                             onPress={handleCompleteOrder}>
                             {loading ?
                                 <Spinner size="small" color="$accent" />

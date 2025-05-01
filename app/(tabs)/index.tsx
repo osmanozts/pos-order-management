@@ -28,21 +28,10 @@ const Kitchen = () => {
 
     useEffect(() => {
         const insertChannel = supabase
-            .channel("orders_insert_listener")
+            .channel("order_insert_done_listener")
             .on(
                 "postgres_changes",
-                { event: "INSERT", schema: "public", table: "orders" },
-                () => {
-                    refetch();
-                }
-            )
-            .subscribe();
-
-        const updateChannel = supabase
-            .channel("orders_update_listener")
-            .on(
-                "postgres_changes",
-                { event: "UPDATE", schema: "public", table: "orders" },
+                { event: "INSERT", schema: "public", table: "order_insert_done" },
                 () => {
                     refetch();
                 }
@@ -51,7 +40,6 @@ const Kitchen = () => {
 
         return () => {
             insertChannel.unsubscribe();
-            updateChannel.unsubscribe();
         };
     }, []);
 

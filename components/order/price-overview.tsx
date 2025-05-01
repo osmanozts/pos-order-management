@@ -33,7 +33,7 @@ export function PriceOverview({ order, totalPrice, isLoading, refetch }: Props) 
             shadowColor="rgba(0,0,0,0.06)"
             shadowOffset={{ width: 0, height: 6 }}
             shadowRadius={16}
-            width="$xxl" // oder maxWidth="$20"
+            width="$xxl"
             maxWidth="$xxxl"
         >
             <XStack justifyContent="space-between" marginTop="$sm" alignItems="center">
@@ -107,9 +107,9 @@ export function PriceOverview({ order, totalPrice, isLoading, refetch }: Props) 
 
                             <CustomButton
                                 width="$sm"
-                                backgroundColor={!(orderItem.state === "DONE") ? "$successBg" : "$accentBg"}
-                                color={!(orderItem.state === "DONE") ? "$success" : "$accent"}
-                                icon={!(orderItem.state === "PAID") ? <CheckCircle2 size={24} /> : <X size={24} />}
+                                backgroundColor={(orderItem.state !== "DONE") ? "$accentBg" : "$successBg"}
+                                color={(orderItem.state !== "DONE") ? "$accent" : "$success"}
+                                icon={orderItem.state === "DONE" ? <CheckCircle2 size={24} /> : <X size={24} />}
                                 alignSelf="flex-end"
                                 onPress={() => updateOrderItemState(orderItem.id, orderItem.state === "DONE" ? "PAID" : "DONE", refetch)}>
                                 {isLoading && <Spinner color="$invertedText" />}

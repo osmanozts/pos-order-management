@@ -25,8 +25,8 @@ const Checkout = () => {
     const { data: orders, refetch, isLoading } = useFinishedOrders();
 
     useEffect(() => {
-        const updateChannel = supabase
-            .channel("order_update_listener")
+        const orderChannel = supabase
+            .channel("order_paid_state_listener")
             .on(
                 "postgres_changes",
                 { event: "UPDATE", schema: "public", table: "orders" },
@@ -37,7 +37,7 @@ const Checkout = () => {
             .subscribe();
 
         return () => {
-            updateChannel.unsubscribe();
+            orderChannel.unsubscribe();
         };
     }, []);
 

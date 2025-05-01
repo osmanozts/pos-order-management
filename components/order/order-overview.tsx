@@ -6,12 +6,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { CustomButton } from "../ui";
 import dayjs from 'dayjs';
 
-const iconMap = {
-    dish: Utensils,
-    topping: Plus,
-    drink: CupSoda,
-};
-
 interface OrderOverviewProps {
     order: SingleOrder;
     isLoading: boolean;
@@ -104,23 +98,17 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
                             type="dish"
 
                         />
-                        <OrderOverviewRow
-                            label="Toppings"
-                            value={
-                                orderItem.toppings?.length
-                                    ? orderItem.toppings.map((t) => `- ${t.values?.name}`).join(",\n")
-                                    : "Keine"
-                            }
-                            type="topping"
-                        />
+                        {orderItem.toppings.length > 0 && (
+                            <OrderOverviewRow
+                                label="Toppings"
+                                value={orderItem.toppings.map((t) => `- ${t.values?.name}`).join(",\n")}
+                                type="topping"
+                            />)}
 
                         {orderItem.drinks.length > 0 && (
                             <OrderOverviewRow
                                 label="Getränke"
-                                value={
-                                    orderItem.drinks?.length
-                                        ? orderItem.drinks.map((d) => d.values?.name).join(",\n")
-                                        : "Keine"
+                                value={orderItem.drinks.map((d) => d.values?.name).join(",\n")
                                 }
                                 type="drink"
                             />

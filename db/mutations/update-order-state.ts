@@ -11,5 +11,12 @@ export async function updateOrderState(
     .update({ state: state })
     .eq("id", id);
   if (error) throw error;
-  else refetch();
+
+  const { error: orderItemsError } = await supabase
+    .from("order_items")
+    .update({ state: state })
+    .eq("order_id", id);
+  if (orderItemsError) throw orderItemsError;
+
+  refetch();
 }

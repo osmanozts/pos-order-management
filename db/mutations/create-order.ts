@@ -97,4 +97,12 @@ export async function createOrder(
       }
     })
   );
+
+  const { error: signalError } = await supabase
+    .from("order_insert_done")
+    .insert([{ order_id: order.id }]);
+
+  if (signalError) {
+    console.error("Fehler beim Signal für vollständige Order:", signalError);
+  }
 }
