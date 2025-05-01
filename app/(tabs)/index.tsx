@@ -50,7 +50,6 @@ const Kitchen = () => {
             .subscribe();
 
         return () => {
-            console.log("UNSUBSCRIBE")
             insertChannel.unsubscribe();
             updateChannel.unsubscribe();
         };
@@ -58,7 +57,6 @@ const Kitchen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log("FOKUSS");
             refetch();
         }, [])
     );

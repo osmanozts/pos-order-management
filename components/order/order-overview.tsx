@@ -31,7 +31,7 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
             shadowColor="rgba(0,0,0,0.06)"
             shadowOffset={{ width: 0, height: 6 }}
             shadowRadius={16}
-            width="$xxl" // oder maxWidth="$20"
+            width="$xxl"
             maxWidth="$xxxl"
         >
 
