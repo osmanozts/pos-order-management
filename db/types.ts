@@ -278,9 +278,11 @@ export type Database = {
       topping_type:
         | "topping"
         | "supplement"
+        | "oven"
         | "extra"
         | "exclude_topping"
         | "exclude_supplement"
+        | "exclude_oven"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -415,9 +417,11 @@ export const Constants = {
       topping_type: [
         "topping",
         "supplement",
+        "oven",
         "extra",
         "exclude_topping",
         "exclude_supplement",
+        "exclude_oven",
       ],
     },
   },

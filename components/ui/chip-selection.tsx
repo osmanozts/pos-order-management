@@ -10,7 +10,7 @@ interface Props {
 
 export function ChipSelection({ type, selected, onSelect }: Props) {
     const dishCategories: Enums<"main_dish_type">[] = ["menu", "doner", "wraps", "lahmacun", "gratinated", "pide", "pizza", "salads", "soup", "appetizer", "extras", "desserts"]
-    const toppingCategories: Enums<"topping_type">[] = ["topping", "supplement", "extra", "exclude_topping", "exclude_supplement"]
+    const toppingCategories: Enums<"topping_type">[] = ["topping", "supplement", "oven", "extra", "exclude_topping", "exclude_supplement", "exclude_oven"]
     const drinkCategories: Enums<"drink_type">[] = ["alcohol_free"]
 
     const correctTypes = () => {
@@ -39,9 +39,11 @@ export function ChipSelection({ type, selected, onSelect }: Props) {
             // Toppings
             "topping": "Toppings",
             "supplement": "Beilage",
+            "oven": "Ofen Topping",
             "extra": "Extra",
             "exclude_topping": "Ohne Toppings",
             "exclude_supplement": "Ohne Beilage",
+            "exclude_oven": "Ohne Ofen Topping",
 
             // Getränke
             "alcohol_free": "Alkoholfrei",
