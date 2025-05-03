@@ -1,6 +1,6 @@
 import { CustomButton, InputField } from "@/components";
 import { useAuth } from "@/providers/auth-provider";
-import { Lock, Mail } from "@tamagui/lucide-icons";
+import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
 import { H1, Text, YStack } from "tamagui";
@@ -56,13 +56,13 @@ export default function LoginPage() {
             value={email}
             placeholder="Email..."
             onChange={setEmail}
-            icon={<Mail color="$accent" />}
+            icon={<Text color="$accent"><MaterialIcons name="email" size={24} /></Text>}
           />
           <InputField
             value={password}
             placeholder="Passwort"
             isPasswordField
-            icon={<Lock color="$accent" />}
+            icon={<Text color="$accent"><MaterialIcons name="password" size={24} /></Text>}
             onChange={setPassword}
           />
 

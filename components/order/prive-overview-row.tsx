@@ -1,11 +1,4 @@
-import { CupSoda, Plus, Utensils } from "@tamagui/lucide-icons";
 import { Text, XStack, YStack } from "tamagui";
-
-const iconMap = {
-    dish: Utensils,
-    topping: Plus,
-    drink: CupSoda,
-};
 
 interface Props {
     label: string;

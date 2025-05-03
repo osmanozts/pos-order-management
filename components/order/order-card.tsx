@@ -3,7 +3,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Input, Separator, Stack, Text, TextArea, XStack, YStack } from "tamagui";
 import { OrderCardRow } from "./order-card-row";
 import { CustomButton } from "../ui";
-import { StickyNote, X } from "@tamagui/lucide-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+
 
 interface OrderCardProps {
     index: number;
@@ -33,7 +34,7 @@ export function OrderCard({
             padding="$xl"
             gap="$lg"
             borderWidth={1}
-            borderColor="#ECECEC"
+            borderColor="$borderLight"
             shadowColor="rgba(0,0,0,0.06)"
             shadowOffset={{ width: 0, height: 6 }}
             shadowRadius={16}
@@ -49,7 +50,7 @@ export function OrderCard({
                 <CustomButton
                     width="$sm"
                     backgroundColor="$accentBg"
-                    icon={<X size={24} color="$accent" />}
+                    icon={<Text color="$accent"><MaterialIcons name="close" size={24} /></Text>}
                     alignSelf="flex-end"
                     onPress={() => removeOrder(index)} />
             </XStack>
@@ -101,7 +102,7 @@ export function OrderCard({
                         alignItems="center"
                         justifyContent="center"
                     >
-                        <StickyNote size={18} color="#F85F6A" />
+                        <Text color="$accent"><FontAwesome5 name="sticky-note" size={24} /></Text>
                     </Stack>
                     <Input onChangeText={(text) => onNoteChange(index, text)} borderWidth={0} height="$sm" placeholder="Füge eine Notiz hinzu..." flex={1} color="$textSecondary" />
                 </XStack>

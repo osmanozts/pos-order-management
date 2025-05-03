@@ -1,5 +1,6 @@
 import { Dish, Drink, Topping } from "@/models";
-import { Check, Plus, PlusCircle, Utensils, CupSoda } from "@tamagui/lucide-icons";
+import { FontAwesome5, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Check, PlusCircle } from "@tamagui/lucide-icons";
 import { memo } from "react";
 import { Card, Text, XStack, YStack } from "tamagui";
 
@@ -14,11 +15,11 @@ export const DialogSelector = memo(function DialogSelector({ item, isSelected, o
     const getIcon = () => {
         switch (type) {
             case "dish":
-                return <Utensils size="$iconXs" color="$accent" />;
+                return <Text fontSize="$iconXs" color="$accent"><FontAwesome5 name="utensils" /></Text>;
             case "topping":
-                return <Plus size="$iconXs" color="$accent" />;
+                return <Text fontSize="$iconXs" color="$accent"><FontAwesome5 name="plus" /></Text>;
             case "drink":
-                return <CupSoda size="$iconXs" color="$accent" />;
+                return <Text fontSize="$iconXs" color="$accent"><MaterialCommunityIcons name="bottle-soda-classic-outline" /></Text>;
             default:
                 return null;
         }
@@ -75,9 +76,9 @@ export const DialogSelector = memo(function DialogSelector({ item, isSelected, o
                     </Text>
                 </XStack>
                 {isSelected ? (
-                    <Check size="$iconMedium" color="$textSecondary" />
+                    <Text fontSize="$iconMd" color="$textSecondary"><MaterialIcons name="check-circle" /></Text>
                 ) : (
-                    <PlusCircle size="$iconMedium" color="$textSecondary" />
+                    <Text fontSize="$iconMd" color="$textSecondary"><FontAwesome5 name="plus" /></Text>
                 )}
             </XStack>
         </Card >

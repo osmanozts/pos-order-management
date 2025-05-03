@@ -1,10 +1,12 @@
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, XStack, YStack } from "tamagui";
-import { Utensils, CupSoda, Plus } from "@tamagui/lucide-icons";
+
+const iconColor = '#F85F6A';
 
 const iconMap = {
-    dish: Utensils,
-    topping: Plus,
-    drink: CupSoda,
+    dish: <FontAwesome5 name="utensils" color={iconColor} size={18} />,
+    topping: <FontAwesome5 name="plus" color={iconColor} size={18} />,
+    drink: <MaterialCommunityIcons name="bottle-soda-classic-outline" color={iconColor} size={32} />,
 };
 
 interface OrderCardRowProps {
@@ -20,7 +22,7 @@ export function OrderCardRow({
     onPress,
     type,
 }: OrderCardRowProps) {
-    const Icon = iconMap[type];
+    const returnIcon = () => iconMap[type];
 
     return (
         <XStack
@@ -43,7 +45,7 @@ export function OrderCardRow({
                 alignItems="center"
                 justifyContent="center"
             >
-                <Icon size={18} color="#F85F6A" />
+                {returnIcon()}
             </YStack>
 
             <YStack flex={1}>

@@ -1,5 +1,4 @@
 import { SingleOrder, updateOrderItemState, updateOrderState } from "@/db";
-import { Utensils, CupSoda, Plus, Save, CheckCircle2, Forward, CheckCheck, Cross, X } from "@tamagui/lucide-icons";
 import { Separator, Text, XStack, YStack, Stack, Spinner } from "tamagui";
 import { OrderOverviewRow } from "./order-overview-row";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -21,7 +20,7 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
             padding="$xl"
             gap="$xl"
             borderWidth={1}
-            borderColor="#ECECEC"
+            borderColor="$borderLight"
             shadowColor="rgba(0,0,0,0.06)"
             shadowOffset={{ width: 0, height: 6 }}
             shadowRadius={16}
@@ -48,7 +47,7 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
 
                 <CustomButton
                     width="$sm"
-                    icon={!isLoading ? <Forward size={24} /> : undefined}
+                    icon={!isLoading ? <Text><MaterialIcons name="forward" size={24} /></Text> : undefined}
                     alignSelf="flex-end"
                     backgroundColor="$successBg"
                     color="$success"
@@ -83,7 +82,7 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
                             success={!(orderItem.state === "DONE")}
                             backgroundColor={!(orderItem.state === "DONE") ? "$successBg" : "$accentBg"}
                             color={!(orderItem.state === "DONE") ? "$success" : "$accent"}
-                            icon={!(orderItem.state === "DONE") ? <CheckCheck size={24} /> : <X size={24} />}
+                            icon={!(orderItem.state === "DONE") ? <Text><MaterialIcons name="check-circle" size={20} /></Text> : <Text><MaterialIcons name="close" size={24} /></Text>}
                             alignSelf="flex-end"
                             onPress={() => updateOrderItemState(orderItem.id, orderItem.state === "IN_PROGRESS" ? "DONE" : "IN_PROGRESS", refetch)}>
                             {isLoading && <Spinner color="$invertedText" />}

@@ -1,12 +1,13 @@
-import { Enums } from "@/db";
-import { CupSoda, Plus, StickyNote, Utensils } from "@tamagui/lucide-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, XStack, YStack } from "tamagui";
 
+const iconColor = '#F85F6A';
+
 const iconMap = {
-    dish: Utensils,
-    topping: Plus,
-    drink: CupSoda,
-    note: StickyNote
+    dish: <FontAwesome5 name="utensils" color={iconColor} size={18} />,
+    topping: <FontAwesome5 name="plus" color={iconColor} size={18} />,
+    drink: <MaterialCommunityIcons name="bottle-soda-classic-outline" color={iconColor} size={32} />,
+    note: <FontAwesome5 name="sticky-note" color={iconColor} size={18} />,
 };
 
 interface OrderOverviewRowProps {
@@ -16,7 +17,7 @@ interface OrderOverviewRowProps {
 }
 
 export function OrderOverviewRow({ label, value, type }: OrderOverviewRowProps) {
-    const Icon = iconMap[type];
+    const renderIcon = () => iconMap[type];
 
     return (
         <XStack
@@ -37,7 +38,7 @@ export function OrderOverviewRow({ label, value, type }: OrderOverviewRowProps) 
                 alignItems="center"
                 justifyContent="center"
             >
-                <Icon size={18} color="#F85F6A" />
+                {renderIcon()}
             </YStack>
 
             <YStack flex={1}>

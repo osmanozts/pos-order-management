@@ -1,6 +1,6 @@
 
 
-import { CustomButton, ItemDialog, OrderCard, TableNumberSheet } from "@/components";
+import { CustomButton, ItemDialog, OrderCard, TableNumberDialog } from "@/components";
 import { createOrder } from "@/db/mutations";
 import { Dish, Drink, OrderItem, Placement } from "@/models";
 import { Topping } from "@/models/topping";
@@ -23,7 +23,7 @@ export default function NewOrderIndex() {
     const [orderItems, setOrderItems] = useState<OrderItem[]>([
         { main_dish: null, toppings: [], drinks: [] },
     ]);
-    const [isTableSheetOpen, setIsTableSheetOpen] = useState<boolean>(false);
+    const [isTableDialogOpen, setIsTableDialogOpen] = useState<boolean>(false);
     const [selectedTable, setSelectedTable] = useState<Placement>();
     const [dialogState, setDialogState] = useState<DialogState>(null);
 
@@ -118,7 +118,7 @@ export default function NewOrderIndex() {
                 {/* Header-Bereich */}
                 <YStack gap="$lg">
                     <XStack gap="$md" justifyContent="space-between">
-                        <CustomButton flex={1} onPress={() => setIsTableSheetOpen(true)}>
+                        <CustomButton flex={1} onPress={() => setIsTableDialogOpen(true)}>
                             {selectedTable?.icon}
                             <Text fontSize="$lg" fontWeight="600" color="$invertedText" marginLeft="$sm">
                                 {!selectedTable ? "Position wählen" : selectedTable.text}
@@ -181,9 +181,9 @@ export default function NewOrderIndex() {
                         />
                     ))}
                 </ScrollView>
-                <TableNumberSheet
-                    isOpen={isTableSheetOpen}
-                    setIsOpen={setIsTableSheetOpen}
+                <TableNumberDialog
+                    isOpen={isTableDialogOpen}
+                    setIsOpen={setIsTableDialogOpen}
                     onSelect={handleTableSelect}
                 />
                 <ItemDialog
