@@ -1,6 +1,6 @@
 import { ScrollView, Text, XStack, YStack } from "tamagui";
 import { CustomButton, OrderOverview } from "@/components";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { supabase, useOrders } from "@/db";
 import LottieView from 'lottie-react-native';

@@ -68,14 +68,14 @@ const single_order = supabase
     id,
     state,
     note,
-    main_dish:main_dishes!main_dish_id(id, name, price, size),
+    main_dish:main_dishes!main_dish_id(*),
     toppings:order_item_toppings!order_item_id(
       id,
-      values: toppings!topping_id(name, price)
+      values: toppings!topping_id(*)
     ),
     drinks:order_item_drinks!order_item_id(
       id,
-      values: drinks!drink_id(name, price)
+      values: drinks!drink_id(*)
     )
   )
   `

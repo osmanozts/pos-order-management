@@ -39,6 +39,17 @@ export const tokens = createTokens({
     semibold: "600",
     bold: "700",
 
+    // fontSizes
+    textXs: 14,
+    textSm: 16,
+    textBase: 18,
+    textLg: 20,
+    headingSm: 22,
+    headingMd: 24,
+    headingLg: 26,
+    headingXl: 28,
+    display: 30,
+
     true: 120,
   },
   space: {

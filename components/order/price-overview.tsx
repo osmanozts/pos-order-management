@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { Separator, Spinner, Stack, Text, XStack, YStack } from "tamagui";
 import { CustomButton } from "../ui";
 import { PriceOverviewRow } from "./prive-overview-row";
+import { PriceOverviewHeader } from "./price-overview-header";
 
 interface Props {
     order: SingleOrder;
@@ -12,6 +13,7 @@ interface Props {
     isLoading: boolean;
     refetch: () => void;
 }
+
 
 export function PriceOverview({ order, totalPrice, isLoading, refetch }: Props) {
 
@@ -29,42 +31,7 @@ export function PriceOverview({ order, totalPrice, isLoading, refetch }: Props) 
             width="$xxl"
             maxWidth="$xxxl"
         >
-            <XStack justifyContent="space-between" marginTop="$sm" alignItems="center">
-                <XStack gap="$md">
-                    <XStack gap="$xs">
-                        <MaterialIcons name="table-restaurant" size={24} color="grey" />
-                        <Text fontSize="$xl" fontWeight="400" color="$textSecondary">
-                            {order.placement}
-                        </Text>
-                    </XStack>
-
-                    <XStack gap="$xs">
-                        <MaterialIcons name="timelapse" size={24} color="grey" />
-                        <Text fontSize="$xl" fontWeight="400" color="$textSecondary">
-                            {dayjs(order.created_at).format("HH:mm")}
-                        </Text>
-                    </XStack>
-                </XStack>
-
-                <XStack gap="$md" alignItems="center">
-                    <XStack gap="$xs">
-                        <Text color="$accent"><FontAwesome5 name="coins" size={20} /></Text>
-                        <Text fontSize="$xl" fontWeight="700" color="$textSecondary">
-                            {totalPrice}€
-                        </Text>
-                    </XStack>
-
-                    <CustomButton
-                        width="$sm"
-                        icon={<Text><FontAwesome5 name="trash" size={20} /></Text>}
-                        alignSelf="flex-end"
-                        backgroundColor="$accentBg"
-                        color="$accent"
-                        onPress={() => deleteOrder(order.id, refetch)}>
-                        {isLoading && <Spinner color="$invertedText" />}
-                    </CustomButton>
-                </XStack>
-            </XStack>
+            <PriceOverviewHeader order={order} totalPrice={totalPrice} isLoading={isLoading} refetch={refetch}></PriceOverviewHeader>
 
             <Separator borderColor="$borderDark" marginVertical="$xs" />
 

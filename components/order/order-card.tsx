@@ -4,6 +4,7 @@ import { Input, Separator, Stack, Text, TextArea, XStack, YStack } from "tamagui
 import { OrderCardRow } from "./order-card-row";
 import { CustomButton } from "../ui";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { OrderCardHeader } from "./order-card-header";
 
 
 interface OrderCardProps {
@@ -16,6 +17,9 @@ interface OrderCardProps {
     openDialog: (type: "dish" | "topping" | "drink", index: number) => void;
     removeOrder: (index: number) => void;
 }
+
+
+
 
 export function OrderCard({
     index,
@@ -39,21 +43,7 @@ export function OrderCard({
             shadowOffset={{ width: 0, height: 6 }}
             shadowRadius={16}
         >
-            <XStack justifyContent="space-between" gap="$md">
-                <XStack alignItems="center" gap="$md">
-                    <MaterialIcons name="person" size={20} color="grey" />
-                    <Text fontSize="$xl" fontWeight="700" color="$textDisabled">
-                        {index + 1}
-                    </Text>
-                </XStack>
-
-                <CustomButton
-                    width="$sm"
-                    backgroundColor="$accentBg"
-                    icon={<Text color="$accent"><MaterialIcons name="close" size={24} /></Text>}
-                    alignSelf="flex-end"
-                    onPress={() => removeOrder(index)} />
-            </XStack>
+            <OrderCardHeader index={index} removeOrder={removeOrder}></OrderCardHeader>
 
             <Separator borderColor="$borderLight" />
 

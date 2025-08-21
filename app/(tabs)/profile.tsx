@@ -1,32 +1,98 @@
 import { CustomButton } from '@/components';
 import { useAuth } from '@/providers/auth-provider';
-import { useRouter } from 'expo-router';
-import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, YStack } from 'tamagui';
+import { Avatar, Card, Separator, Stack, Text, XStack, YStack } from 'tamagui';
+import { LogOut } from '@tamagui/lucide-icons';
+import React from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useProfile } from '@/db';
+import { useRouter } from 'expo-router';
 
 const Profile = () => {
-    const router = useRouter();
-    const insets = useSafeAreaInsets();
+    const router = useRouter()
     const { user, signOut } = useAuth();
+    const insets = useSafeAreaInsets();
+    const { data: profile, isLoading } = useProfile(user.email)
+    console.log("🚀 ~ data:", profile)
+    if (user)
+        return (
+            <YStack
+                flex={1}
+                paddingTop={insets.top + 20}
+                paddingHorizontal="$lg"
+                backgroundColor="$bgPrimary"
+                justifyContent="space-between"
+            >
+                <YStack flex={1} justifyContent='space-between'>
+                    <YStack gap="$md">
 
-    return (
-        <YStack
-            flex={1}
-            backgroundColor="$bgPrimary"
-            paddingTop={insets.top}
-            paddingHorizontal="$md"
-            gap="$md"
-        >
-            <Text fontWeight="bold" fontSize={26} color="$textSecondary">
-                Profil
-            </Text>
-            <Text fontWeight="regular" fontSize={26} color="$textSecondary">
-                Email: {user?.email ?? "---"}
-            </Text>
-            <CustomButton onPress={() => signOut()}>Abmelden</CustomButton>
-        </YStack>
-    );
+                        <Text fontSize={24} fontWeight="bold" color="$text">
+                            Infos
+                        </Text>
+                        <XStack alignItems="center" gap="$md">
+                            <YStack gap="$lg" width="100%">
+                                <XStack
+                                    borderWidth={1}
+                                    height="$sm" width="100%"
+                                    borderRadius="$radiusMd"
+                                    borderColor="$borderLight"
+                                    paddingVertical="$sd"
+                                    paddingHorizontal="$lg"
+                                    backgroundColor="$surfaceSecondary"
+                                    alignItems='center'>
+                                    <Text fontSize={20} fontWeight="600">
+                                        Email: {profile?.email ?? '---'}
+                                    </Text>
+                                </XStack>
+                                <XStack borderWidth={1} height="$sm" width="100%" borderRadius="$radiusMd" borderColor="$borderLight"
+                                    paddingVertical="$sd"
+                                    paddingHorizontal="$lg"
+                                    backgroundColor="$surfaceSecondary"
+                                    alignItems='center'>
+                                    <Text fontSize={20} fontWeight="600">
+                                        Name: {profile?.first_name} {profile?.last_name}
+                                    </Text>
+                                </XStack>
+                                <XStack borderWidth={1} height="$sm" width="100%" borderRadius="$radiusMd" borderColor="$borderLight"
+                                    paddingVertical="$sd"
+                                    paddingHorizontal="$lg"
+                                    backgroundColor="$surfaceSecondary"
+                                    alignItems='center'>
+                                    <Text fontSize={20} fontWeight="600">
+                                        Zugeordnet: {profile?.job_role}
+                                    </Text>
+                                </XStack>
+                            </YStack>
+                        </XStack>
+                    </YStack>
+
+
+                    <CustomButton
+                        theme="danger"
+                        icon={<Text> <MaterialIcons name="logout" size={18} /></Text>}
+                        onPress={() => {
+                            signOut();
+                            router.replace("/login")
+                        }}
+                    >
+                        Abmelden
+                    </CustomButton>
+                </YStack>
+
+                <YStack gap="$md" alignItems="center" marginBottom="$md">
+                    <Separator />
+                    <Text fontSize={18} color="$gray9">
+                        Entwickelt von
+                    </Text>
+                    <Text fontWeight="600" color="$gray11">
+                        Osman Öztas
+                    </Text>
+                    <Text fontSize="$TextXs" color="$gray9">
+                        Version 1.0.0
+                    </Text>
+                </YStack>
+            </YStack>
+        );
 };
 
 export default Profile;

@@ -22,6 +22,11 @@ export const CustomButton = styled(Button, {
             true: {
                 backgroundColor: "$warning",
             }
+        },
+        info: {
+            true: {
+                backgroundColor: "#eee"
+            }
         }
     }
 });

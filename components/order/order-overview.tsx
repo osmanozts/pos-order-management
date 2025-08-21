@@ -4,12 +4,14 @@ import { OrderOverviewRow } from "./order-overview-row";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { CustomButton } from "../ui";
 import dayjs from 'dayjs';
+import { OrderOverviewHeader } from "./order-overview-header";
 
 interface OrderOverviewProps {
     order: SingleOrder;
     isLoading: boolean;
     refetch: () => void;
 }
+
 
 export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps) {
 
@@ -28,33 +30,7 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
             maxWidth="$xxxl"
         >
 
-            <XStack justifyContent="space-between" alignItems="center" marginTop="$sm">
-                <XStack gap="$md">
-                    <XStack gap="$xs">
-                        <MaterialIcons name="table-restaurant" size={24} color="grey" />
-                        <Text fontSize="$xl" fontWeight="400" color="$textSecondary">
-                            {order.placement}
-                        </Text>
-                    </XStack>
-
-                    <XStack gap="$xs">
-                        <MaterialIcons name="timelapse" size={24} color="grey" />
-                        <Text fontSize="$xl" fontWeight="400" color="$textSecondary">
-                            {dayjs(order.created_at).format("HH:mm")}
-                        </Text>
-                    </XStack>
-                </XStack>
-
-                <CustomButton
-                    width="$sm"
-                    icon={!isLoading ? <Text><MaterialIcons name="forward" size={24} /></Text> : undefined}
-                    alignSelf="flex-end"
-                    backgroundColor="$successBg"
-                    color="$success"
-                    onPress={() => updateOrderState(order.id, "DONE", refetch)}>
-                    {isLoading && <Spinner color="$invertedText" />}
-                </CustomButton>
-            </XStack>
+            <OrderOverviewHeader order={order} isLoading={isLoading} refetch={refetch}></OrderOverviewHeader>
 
             <Separator borderColor="$borderDark" marginBottom="$sm" />
             {order.order_items.map((orderItem, index) => (
@@ -104,15 +80,6 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
                                 type="topping"
                             />)}
 
-                        {orderItem.drinks.length > 0 && (
-                            <OrderOverviewRow
-                                label="Getränke"
-                                value={orderItem.drinks.map((d) => d.values?.name).join(",\n")
-                                }
-                                type="drink"
-                            />
-                        )}
-
                         {orderItem.note && (
                             <OrderOverviewRow
                                 label="Notiz"
@@ -124,12 +91,24 @@ export function OrderOverview({ order, isLoading, refetch }: OrderOverviewProps)
                         )}
                     </YStack>
 
-                    {/* Optional Separator zwischen Personen */}
-                    {index < order.order_items.length - 1 && (
-                        <Separator borderColor="$borderDark" marginTop="$lg" />
-                    )}
+                    <Separator borderColor="$borderDark" marginTop="$lg" />
                 </YStack>
             ))}
+
+            {order.order_items.map((orderItem) => {
+                return (
+
+                    orderItem.drinks.length > 0 && (
+                        <OrderOverviewRow
+                            label="Getränke"
+                            value={orderItem.drinks.map((d) => d.values?.name).join(",\n")
+                            }
+                            type="drink"
+                        />
+                    )
+                )
+
+            })}
         </YStack>
     );
 }

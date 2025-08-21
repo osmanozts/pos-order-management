@@ -24,14 +24,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Login-Funktion
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       setUser(data.user);
-      router.replace("/"); // Nach erfolgreichem Login zur Startseite
+      router.replace("/");
     } catch (error) {
       console.error("Login error:", error);
     } finally {
@@ -39,14 +38,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Logout-Funktion
   const signOut = async () => {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       setUser(null);
-      router.replace("/login"); // Nach Logout zur Login-Seite
+      router.replace("/login");
     } catch (error) {
       console.error("Sign-out error:", error);
     } finally {
@@ -54,7 +52,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Auth-Status beim Start überprüfen
   useEffect(() => {
     const checkAuth = async () => {
       const { data, error } = await supabase.auth.getSession();
@@ -63,7 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     };
 
-    // Session-Listener für Auth-Änderungen
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
