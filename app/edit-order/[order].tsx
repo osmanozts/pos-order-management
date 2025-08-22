@@ -4,17 +4,17 @@ import {
   OrderCard,
   TableNumberDialog,
 } from "@/components";
-import { createOrder } from "@/db/mutations";
+import { SingleOrder } from "@/db";
+import { updateOrder } from "@/db/mutations";
 import { Dish, Drink, OrderItem, Placement } from "@/models";
 import { Topping } from "@/models/topping";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView, Spinner, Text, XStack, YStack } from "tamagui";
 import { updateOrderItem } from "./services/update-order-item";
-import { KeyboardAvoidingView, Platform } from "react-native";
-import { SingleOrder } from "@/db";
 
 type DialogState = {
   type: "dish" | "topping" | "drink";
@@ -25,28 +25,34 @@ export default function EditOrderIndex() {
   const { order } = useLocalSearchParams<{ order: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [isTableDialogOpen, setIsTableDialogOpen] = useState<boolean>(false);
   const [selectedTable, setSelectedTable] = useState<Placement>();
   const [dialogState, setDialogState] = useState<DialogState>(null);
 
-
   useEffect(() => {
-    const orderObject: SingleOrder = JSON.parse(order)
+    const orderObject: SingleOrder = JSON.parse(order);
+    setOrderId(orderObject.id);
 
-    const mappedOrderItems: OrderItem[] = orderObject.order_items.map(item => {
-      return {
-        main_dish: item.main_dish,
-        toppings: Array.from(item.toppings.values()).map(t => t?.values!).filter(Boolean),
-        drinks: Array.from(item.drinks.values()).map(d => d?.values!).filter(Boolean),
-        note: item.note ?? undefined
-      }
-    })
+    const mappedOrderItems: OrderItem[] = orderObject.order_items.map(
+      (item) => {
+        return {
+          main_dish: item.main_dish,
+          toppings: Array.from(item.toppings.values())
+            .map((t) => t?.values!)
+            .filter(Boolean),
+          drinks: Array.from(item.drinks.values())
+            .map((d) => d?.values!)
+            .filter(Boolean),
+          note: item.note ?? undefined,
+        };
+      },
+    );
 
-    setOrderItems(mappedOrderItems)
-    setSelectedTable({ text: orderObject.placement, icon: <></> })
-  }, [order])
-
+    setOrderItems(mappedOrderItems);
+    setSelectedTable({ text: orderObject.placement, icon: <></> });
+  }, [order]);
 
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +60,7 @@ export default function EditOrderIndex() {
     (type: "dish" | "topping" | "drink", index: number) => {
       setDialogState({ type, index });
     },
-    []
+    [],
   );
 
   const closeDialog = useCallback(() => {
@@ -65,13 +71,13 @@ export default function EditOrderIndex() {
     <K extends keyof OrderItem>(
       key: K,
       value: OrderItem[K] extends (infer U)[] ? U : OrderItem[K],
-      append: boolean = false
+      append: boolean = false,
     ) => {
       setOrderItems((prev) =>
-        updateOrderItem(prev, dialogState, key, value, append)
+        updateOrderItem(prev, dialogState, key, value, append),
       );
     },
-    [dialogState]
+    [dialogState],
   );
 
   const handleAddPerson = useCallback(() => {
@@ -91,9 +97,11 @@ export default function EditOrderIndex() {
     } else {
       setLoading(true);
       try {
-        await createOrder(orderItems, selectedTable).then(() => {
-          router.replace("/(tabs)");
-        });
+        if (orderId) {
+          await updateOrder(orderId, orderItems, selectedTable).then(() => {
+            router.replace("/(tabs)");
+          });
+        } else throw new Error("orderId fehlt");
       } catch (e) {
         throw e;
       } finally {
@@ -110,7 +118,7 @@ export default function EditOrderIndex() {
     (value: { text: string; icon: React.JSX.Element }) => {
       setSelectedTable(value);
     },
-    []
+    [],
   );
 
   const selectedDialogItem = useMemo(() => {
@@ -140,7 +148,7 @@ export default function EditOrderIndex() {
         handleOrderItemUpdate("drinks", item as Drink, true);
       }
     },
-    [dialogState, handleOrderItemUpdate]
+    [dialogState, handleOrderItemUpdate],
   );
 
   return (
@@ -192,14 +200,14 @@ export default function EditOrderIndex() {
                 <Spinner size="small" color="$accent" />
               ) : (
                 <XStack>
-                  <MaterialIcons name="check-circle" size={20} color="white" />
+                  <MaterialIcons name="mode-edit" size={20} color="white" />
                   <Text
                     fontSize="$lg"
                     fontWeight="600"
                     color="$invertedText"
                     marginLeft="$sm"
                   >
-                    Abschließen
+                    Bearbeiten
                   </Text>
                 </XStack>
               )}

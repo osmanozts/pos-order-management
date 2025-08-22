@@ -1,19 +1,16 @@
 import { CustomButton } from '@/components';
-import { useAuth } from '@/providers/auth-provider';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Avatar, Card, Separator, Stack, Text, XStack, YStack } from 'tamagui';
-import { LogOut } from '@tamagui/lucide-icons';
-import React from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useProfile } from '@/db';
+import { useProfile } from "@/db";
+import { useAuth } from "@/providers/auth-provider";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Separator, Text, XStack, YStack } from "tamagui";
 
 const Profile = () => {
     const router = useRouter()
     const { user, signOut } = useAuth();
     const insets = useSafeAreaInsets();
-    const { data: profile, isLoading } = useProfile(user.email)
-    console.log("🚀 ~ data:", profile)
+    const { data: profile, isLoading } = useProfile(user.email);
     if (user)
         return (
             <YStack
