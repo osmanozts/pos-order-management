@@ -1,6 +1,6 @@
-import React from "react";
+export type PlacementIcon = "table" | "takeaway" | "bar" | "none";
 
 export interface Placement {
   text: string;
-  icon: React.JSX.Element;
+  icon: PlacementIcon;
 }

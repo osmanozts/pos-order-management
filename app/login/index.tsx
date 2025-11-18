@@ -1,8 +1,13 @@
 import { CustomButton, InputField } from "@/components";
 import { useAuth } from "@/providers/auth-provider";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { H1, Text, YStack } from "tamagui";
 
 export default function LoginPage() {
@@ -15,8 +20,8 @@ export default function LoginPage() {
     setError(null);
     try {
       await login(email, password);
-    } catch (error: any) {
-      const errorMessage = error;
+    } catch (err: any) {
+      const errorMessage = String(err?.message ?? err ?? "");
       if (errorMessage.includes("Invalid login credentials")) {
         setError("Falsche Anmeldedaten. Bitte versuchen Sie es erneut.");
       } else {
@@ -28,15 +33,16 @@ export default function LoginPage() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}>
-
+      style={{ flex: 1 }}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <YStack
           flex={1}
           justifyContent="center"
+          alignItems="center"
+          gap="$md"
           paddingHorizontal="$md"
-          backgroundColor="tileBgColor"
-          alignItems="center" gap="$md"
+          backgroundColor="$bgPrimary"
         >
           <H1
             fontSize={32}
@@ -48,7 +54,12 @@ export default function LoginPage() {
             Ibos Ocakbasi
           </H1>
 
-          <Text fontSize="$lg" color="$disabledText" marginBottom="$md" textAlign="center">
+          <Text
+            fontSize="$lg"
+            color="$disabledText"
+            marginBottom="$md"
+            textAlign="center"
+          >
             Bitte melden Sie sich an, um fortzufahren.
           </Text>
 
@@ -56,27 +67,36 @@ export default function LoginPage() {
             value={email}
             placeholder="Email..."
             onChange={setEmail}
-            icon={<Text color="$accent"><MaterialIcons name="email" size={24} /></Text>}
+            icon={
+              <Text color="$accent">
+                <MaterialIcons name="email" size={24} />
+              </Text>
+            }
           />
+
           <InputField
             value={password}
             placeholder="Passwort"
             isPasswordField
-            icon={<Text color="$accent"><MaterialIcons name="password" size={24} /></Text>}
             onChange={setPassword}
+            icon={
+              <Text color="$accent">
+                <MaterialIcons name="password" size={24} />
+              </Text>
+            }
           />
 
-          <CustomButton
-            width="100%"
-            backgroundColor="$accentBg"
-            color="$accent"
-            onPress={handleLogin}
-          >
+          <CustomButton fullWidth onPress={handleLogin}>
             Anmelden
           </CustomButton>
 
           {error && (
-            <Text color="$red10" fontSize="$sm" marginTop="$2" textAlign="center">
+            <Text
+              color="$error"
+              fontSize="$sm"
+              marginTop="$2"
+              textAlign="center"
+            >
               {error}
             </Text>
           )}

@@ -1,30 +1,30 @@
+import { QueryData } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
-import { QueryData } from "@supabase/supabase-js";
 
 const orders = supabase
   .from("orders")
   .select(
     `
-  id,
-  placement,
-  state,
-  created_at,
-  order_items:order_items!order_id(
     id,
+    placement,
     state,
-    note,
-    main_dish:main_dishes!main_dish_id(id, name, price, size),
-    toppings:order_item_toppings!order_item_id(
+    created_at,
+    order_items:order_items!order_id(
       id,
-      values: toppings!topping_id(name, price)
-    ),
-    drinks:order_item_drinks!order_item_id(
-      id,
-      values: drinks!drink_id(name, price)
+      state,
+      note,
+      main_dish:main_dishes!main_dish_id(id, name, price, size),
+      toppings:order_item_toppings!order_item_id(
+        id,
+        values: toppings!topping_id(id, name, price)   
+      ),
+      drinks:order_item_drinks!order_item_id(
+        id,
+        values: drinks!drink_id(id, name, price, has_pfand)       
+      )
     )
-  )
-`
+  `,
   )
   .order("index", { referencedTable: "order_items", ascending: true })
   .eq("state", "IN_PROGRESS");
@@ -33,25 +33,25 @@ const finsihedOrders = supabase
   .from("orders")
   .select(
     `
-  id,
-  placement,
-  state,
-  created_at,
-  order_items:order_items!order_id(
     id,
+    placement,
     state,
-    note,
-    main_dish:main_dishes!main_dish_id(id, name, price, size),
-    toppings:order_item_toppings!order_item_id(
+    created_at,
+    order_items:order_items!order_id(
       id,
-      values: toppings!topping_id(name, price)
-    ),
-    drinks:order_item_drinks!order_item_id(
-      id,
-      values: drinks!drink_id(name, price)
+      state,
+      note,
+      main_dish:main_dishes!main_dish_id(id, name, price, size),
+      toppings:order_item_toppings!order_item_id(
+        id,
+        values: toppings!topping_id(id, name, price)  
+      ),
+      drinks:order_item_drinks!order_item_id(
+        id,
+        values: drinks!drink_id(id, name, price, has_pfand)      
+      )
     )
-  )
-`
+  `,
   )
   .order("index", { referencedTable: "order_items", ascending: true })
   .eq("state", "DONE");
@@ -60,25 +60,25 @@ const single_order = supabase
   .from("orders")
   .select(
     `
-  id,
-  placement,
-  state,
-  created_at,
-  order_items:order_items!order_id(
     id,
+    placement,
     state,
-    note,
-    main_dish:main_dishes!main_dish_id(*),
-    toppings:order_item_toppings!order_item_id(
+    created_at,
+    order_items:order_items!order_id(
       id,
-      values: toppings!topping_id(*)
-    ),
-    drinks:order_item_drinks!order_item_id(
-      id,
-      values: drinks!drink_id(*)
+      state,
+      note,
+      main_dish:main_dishes!main_dish_id(*),
+      toppings:order_item_toppings!order_item_id(
+        id,
+        values: toppings!topping_id(*)                 
+      ),
+      drinks:order_item_drinks!order_item_id(
+        id,
+        values: drinks!drink_id(id, name, price, has_pfand)                     
+      )
     )
-  )
-  `
+  `,
   )
   .eq("state", "IN_PROGRESS")
   .single();

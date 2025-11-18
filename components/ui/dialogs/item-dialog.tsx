@@ -65,12 +65,7 @@ export const ItemDialog = memo(function ItemDialog({
       return new Set([selected.name]);
     }
     if ((type === "topping" || type === "drink") && Array.isArray(selected)) {
-      console.log("selected if condition");
-      return new Set(
-        selected.map((s) => {
-          return s.name;
-        }),
-      );
+      return new Set(selected.map((s) => s.name));
     }
     return null;
   }, [selected, type]);
@@ -89,7 +84,7 @@ export const ItemDialog = memo(function ItemDialog({
     >
       <Stack
         flex={1}
-        backgroundColor="rgba(0,0,0,0.5)"
+        backgroundColor="$overlay"
         alignItems="center"
         justifyContent="center"
         paddingHorizontal="$lg"
@@ -101,6 +96,7 @@ export const ItemDialog = memo(function ItemDialog({
           width="100%"
           maxWidth={400}
           maxHeight="80%"
+          gap="$md"
         >
           <ChipSelection
             type={type}
@@ -126,7 +122,7 @@ export const ItemDialog = memo(function ItemDialog({
             </YStack>
           </ScrollView>
 
-          <CustomButton marginTop="$md" success onPress={onClose}>
+          <CustomButton marginTop="$md" info onPress={onClose}>
             Schließen
           </CustomButton>
         </YStack>
